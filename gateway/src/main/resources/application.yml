@@ -1,0 +1,24 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: API-GATEWAY
+  cloud:
+    gateway:
+      routes:
+        - id: EJEMPLO-SERVICE
+          uri: lb://EJEMPLO-SERVICE
+          predicates:
+            - Path=/ejemplo/**
+          filters:
+            - RewritePath=/ejemplo/(?<suburl>.*),/api/${suburl}
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    hostname: localhost

@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: FACTURACION-SERVICE
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/udem_prueba_indukitchen2?createDatabaseIfNotExist=true
+    username: root
+    password: root123.
+server:
+  port: 8090
+eureka:
+  client:
+    enabled: false
+
+
+#server:
+#  port: 8090
+
+#spring:
+ # application:
+  #  name: LOGISTICA-SERVICE
