@@ -1,5 +1,4 @@
 package org.indukitchen.backend.facturacion.service;
 
-public class ProductoService {
-
+public class DetalleService {
 }
