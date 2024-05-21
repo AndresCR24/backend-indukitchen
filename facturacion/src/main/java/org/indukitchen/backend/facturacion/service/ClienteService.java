@@ -25,4 +25,18 @@ public class ClienteService {
     {
         return this.clienteRepository.save(usuario);
     }
+
+    public ClienteEntity get(String cedula)
+    {
+        return this.clienteRepository.findById(cedula).orElse(null);
+    }
+
+    public boolean exists(String cedula)
+    {
+        return this.clienteRepository.existsById(cedula);
+    }
+
+    public void deleteUsuario(String cedula){
+        this.clienteRepository.deleteById(cedula);
+    }
 }
