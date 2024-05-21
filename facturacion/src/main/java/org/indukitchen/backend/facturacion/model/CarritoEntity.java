@@ -24,12 +24,16 @@ public class CarritoEntity {
 
     @Column(name = "cedula_cliente", nullable = false)
     private Integer idCliente;
+
     /*
     @Column(name = "nombre_producto", nullable = false)
     private String nombreProducto;
-*/
+    */
+
+    /*
     @Column(name = "cantidad_producto", nullable = false)
     private Integer cantidadProducto;
+     */
 
     @Column(name = "created_at", nullable = false, updatable = false)
     @CreationTimestamp
