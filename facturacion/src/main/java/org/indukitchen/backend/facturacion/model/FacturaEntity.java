@@ -23,7 +23,7 @@ public class FacturaEntity {
     @Column(name = "id_carrito", nullable = false)
     private Integer idCarrito;
 
-    @Column(name = "id_metodo_pago", nullable = false)
+    @Column(name = "id_metodo_pago")
     private Integer idMetodoPago;
 
     @Column(name = "created_at", nullable = false, updatable = false)
@@ -34,7 +34,6 @@ public class FacturaEntity {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    // Relaciones
     @OneToOne
     @JoinColumn(name = "id_carrito", referencedColumnName = "id", insertable = false, updatable = false)
     private CarritoEntity carritoFactura;

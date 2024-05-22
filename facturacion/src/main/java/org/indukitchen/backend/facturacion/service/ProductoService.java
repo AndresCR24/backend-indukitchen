@@ -6,27 +6,39 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ProductoService {
 
+    private final ProductoRepository productoRepository;
+
     @Autowired
-    private ProductoRepository productoRepository;
-
-    public List<ProductoEntity> findAll() {
-        return productoRepository.findAll();
+    public ProductoService(ProductoRepository productoRepository) {
+        this.productoRepository = productoRepository;
     }
 
-    public Optional<ProductoEntity> findById(Integer id) {
-        return productoRepository.findById(id);
+    public List<ProductoEntity> getAll()
+    {
+        return this.productoRepository.findAll();
     }
 
-    public ProductoEntity save(ProductoEntity producto) {
-        return productoRepository.save(producto);
+    public ProductoEntity get(Integer idProducto)
+    {
+        return this.productoRepository.findById(idProducto).orElse(null);
     }
 
-    public void deleteById(Integer id) {
-        productoRepository.deleteById(id);
+    public ProductoEntity save(ProductoEntity producto)
+    {
+        return this.productoRepository.save(producto);
     }
+
+    public boolean exists(int idProducto)
+    {
+        return this.productoRepository.existsById(idProducto);
+    }
+
+    public void deleteProducto(int idProducto){
+        this.productoRepository.deleteById(idProducto);
+    }
+
 }

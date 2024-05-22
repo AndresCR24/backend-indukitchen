@@ -1,5 +1,6 @@
 package org.indukitchen.backend.facturacion.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,19 +23,19 @@ public class ProductoEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column
+    @Column//(nullable = false)
     private String nombre;
 
     @Column(length = 150)
     private String descripcion;
 
-    @Column
+    @Column//(nullable = false)
     private BigDecimal precio;
 
-    @Column(nullable = false)
+    @Column//(nullable = false)
     private Integer existencia;
 
-    @Column(nullable = false)
+    @Column//(nullable = false)
     private Double peso;
 
     @Column(name = "created_at", nullable = false, updatable = false)
@@ -45,7 +46,6 @@ public class ProductoEntity {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    // Relaciones
-    @ManyToMany(mappedBy = "producto")
-    private List<CarritoEntity> carritoProductos;
+    @OneToMany(mappedBy = "producto", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<DetalleEntity> detalles;
 }

@@ -1,5 +1,8 @@
 package org.indukitchen.backend.facturacion.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -18,6 +21,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
+
 public class ClienteEntity {
 
     @Id
@@ -48,7 +52,6 @@ public class ClienteEntity {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    // Relaciones
     @OneToMany(mappedBy = "clienteCarrito")
     private List<CarritoEntity> carritoCliente;
 }

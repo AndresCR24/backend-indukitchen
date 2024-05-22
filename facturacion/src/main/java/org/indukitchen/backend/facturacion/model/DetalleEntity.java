@@ -1,5 +1,9 @@
 package org.indukitchen.backend.facturacion.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,14 +22,14 @@ public class DetalleEntity {
     @ManyToOne
     @MapsId("idCarrito")
     @JoinColumn(name = "id_carrito")
+    @JsonBackReference
     private CarritoEntity carrito;
 
     @ManyToOne
     @MapsId("idProducto")
-    @JoinColumn(name = "id_producto")
     private ProductoEntity producto;
 
     @Column(name = "cantidad", nullable = false)
     private Integer cantidad;
-}
 
+}

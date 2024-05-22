@@ -1,5 +1,7 @@
 package org.indukitchen.backend.facturacion.service;
 
+import org.indukitchen.backend.facturacion.model.CarritoEntity;
+import org.indukitchen.backend.facturacion.model.ClienteEntity;
 import org.indukitchen.backend.facturacion.model.FacturaEntity;
 import org.indukitchen.backend.facturacion.repository.FacturaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,22 +13,35 @@ import java.util.Optional;
 @Service
 public class FacturaService {
 
+    private final FacturaRepository facturaRepository;
+
     @Autowired
-    private FacturaRepository facturaRepository;
-
-    public List<FacturaEntity> findAll() {
-        return facturaRepository.findAll();
+    public FacturaService(FacturaRepository facturaRepository) {
+        this.facturaRepository = facturaRepository;
     }
 
-    public Optional<FacturaEntity> findById(Integer id) {
-        return facturaRepository.findById(id);
+    public List<FacturaEntity> getAll()
+    {
+        return this.facturaRepository.findAll();
     }
 
-    public FacturaEntity save(FacturaEntity factura) {
-        return facturaRepository.save(factura);
+    public FacturaEntity get(Integer idFactura)
+    {
+        return this.facturaRepository.findById(idFactura).orElse(null);
     }
 
-    public void deleteById(Integer id) {
-        facturaRepository.deleteById(id);
+    public FacturaEntity save(FacturaEntity factura)
+    {
+        return this.facturaRepository.save(factura);
     }
+
+    public boolean exists(Integer idFactura)
+    {
+        return this.facturaRepository.existsById(idFactura);
+    }
+
+    public void deleteFactura(Integer idUsuario){
+        this.facturaRepository.deleteById(idUsuario);
+    }
+
 }

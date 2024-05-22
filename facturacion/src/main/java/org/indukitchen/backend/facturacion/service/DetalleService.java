@@ -1,5 +1,4 @@
 package org.indukitchen.backend.facturacion.service;
-
 import org.indukitchen.backend.facturacion.model.DetalleEntity;
 import org.indukitchen.backend.facturacion.model.DetalleId;
 import org.indukitchen.backend.facturacion.repository.DetalleRepository;
@@ -12,22 +11,34 @@ import java.util.Optional;
 @Service
 public class DetalleService {
 
+    private final DetalleRepository detalleRepository;
+
     @Autowired
-    private DetalleRepository detalleRepository;
-
-    public List<DetalleEntity> findAll() {
-        return detalleRepository.findAll();
+    public DetalleService(DetalleRepository detalleRepository) {
+        this.detalleRepository = detalleRepository;
     }
 
-    public Optional<DetalleEntity> findById(DetalleId id) {
-        return detalleRepository.findById(id);
+    public List<DetalleEntity> getAll() {
+        return this.detalleRepository.findAll();
     }
 
-    public DetalleEntity save(DetalleEntity detalle) {
-        return detalleRepository.save(detalle);
+    public DetalleEntity get(DetalleId idDetalle)
+    {
+        return this.detalleRepository.findById(idDetalle).orElse(null);
     }
 
-    public void deleteById(DetalleId id) {
-        detalleRepository.deleteById(id);
+    public DetalleEntity save(DetalleEntity idDetalle)
+    {
+        return this.detalleRepository.save(idDetalle);
+    }
+
+    public boolean exists(DetalleId idDetalle)
+    {
+        return this.detalleRepository.existsById(idDetalle);
+    }
+
+
+    public void deleteUsuario(DetalleId idDetalle){
+        this.detalleRepository.deleteById(idDetalle);
     }
 }

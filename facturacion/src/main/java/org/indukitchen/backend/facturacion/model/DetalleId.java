@@ -5,6 +5,7 @@ import jakarta.persistence.Embeddable;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -29,8 +30,9 @@ public class DetalleId implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        DetalleId detalleId = (DetalleId) o;
-        return Objects.equals(idCarrito, detalleId.idCarrito) && Objects.equals(idProducto, detalleId.idProducto);
+        DetalleId that = (DetalleId) o;
+        return Objects.equals(idCarrito, that.idCarrito) &&
+                Objects.equals(idProducto, that.idProducto);
     }
 
     @Override

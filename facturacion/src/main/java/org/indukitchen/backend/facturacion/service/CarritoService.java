@@ -6,27 +6,37 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class CarritoService {
 
+    private final CarritoRepository carritoRepository;
+
     @Autowired
-    private CarritoRepository carritoRepository;
-
-    public List<CarritoEntity> findAll() {
-        return carritoRepository.findAll();
+    public CarritoService(CarritoRepository carritoRepository) {
+        this.carritoRepository = carritoRepository;
     }
 
-    public Optional<CarritoEntity> findById(Integer id) {
-        return carritoRepository.findById(id);
+    public List<CarritoEntity> getAll() {
+        return this.carritoRepository.findAll();
     }
 
-    public CarritoEntity save(CarritoEntity carrito) {
-        return carritoRepository.save(carrito);
+    public CarritoEntity get(Integer idCarrito)
+    {
+        return this.carritoRepository.findById(idCarrito).orElse(null);
     }
 
-    public void deleteById(Integer id) {
-        carritoRepository.deleteById(id);
+    public CarritoEntity save(CarritoEntity usuario)
+    {
+        return this.carritoRepository.save(usuario);
+    }
+
+    public boolean exists(int idCarrito)
+    {
+        return this.carritoRepository.existsById(idCarrito);
+    }
+
+    public void deleteUsuario(int idCarrito){
+        this.carritoRepository.deleteById(idCarrito);
     }
 }

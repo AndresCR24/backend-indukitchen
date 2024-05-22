@@ -8,52 +8,55 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/detalles")
 public class DetalleController {
 
+    private final DetalleService detalleService;
+
     @Autowired
-    private DetalleService detalleService;
+    public DetalleController(DetalleService detalleService) {
+        this.detalleService = detalleService;
+    }
+
+    //Operaciones básicas CRUD
+    @PostMapping
+    public ResponseEntity<DetalleEntity> add(@RequestBody DetalleEntity detalle) {
+        return ResponseEntity.ok(this.detalleService.save(detalle));
+    }
 
     @GetMapping
-    public List<DetalleEntity> getAllDetalles() {
-        return detalleService.findAll();
+    public ResponseEntity<List<DetalleEntity>> getAll() {
+        return ResponseEntity.ok(this.detalleService.getAll());
     }
 
-    @GetMapping("/{idCarrito}/{idProducto}")
-    public ResponseEntity<DetalleEntity> getDetalleById(@PathVariable Integer idCarrito, @PathVariable Integer idProducto) {
-        DetalleId id = new DetalleId(idCarrito, idProducto);
-        Optional<DetalleEntity> detalle = detalleService.findById(id);
-        return detalle.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
-    }
-
-    @PostMapping
-    public DetalleEntity createDetalle(@RequestBody DetalleEntity detalle) {
-        return detalleService.save(detalle);
-    }
-
-    @PutMapping("/{idCarrito}/{idProducto}")
-    public ResponseEntity<DetalleEntity> updateDetalle(@PathVariable Integer idCarrito, @PathVariable Integer idProducto, @RequestBody DetalleEntity detalleDetails) {
-        DetalleId id = new DetalleId(idCarrito, idProducto);
-        Optional<DetalleEntity> detalle = detalleService.findById(id);
-        if (detalle.isPresent()) {
-            detalleDetails.setId(id);
-            return ResponseEntity.ok(detalleService.save(detalleDetails));
+    @GetMapping("/{id}")
+    public ResponseEntity<DetalleEntity> get(@PathVariable DetalleId id) {
+        DetalleEntity detalle = this.detalleService.get(id);
+        if (detalle != null) {
+            return ResponseEntity.ok(detalle);
         } else {
             return ResponseEntity.notFound().build();
         }
     }
 
-    @DeleteMapping("/{idCarrito}/{idProducto}")
-    public ResponseEntity<Void> deleteDetalle(@PathVariable Integer idCarrito, @PathVariable Integer idProducto) {
-        DetalleId id = new DetalleId(idCarrito, idProducto);
-        if (detalleService.findById(id).isPresent()) {
-            detalleService.deleteById(id);
+    @PutMapping("/{id}")
+    public ResponseEntity<DetalleEntity> update(@PathVariable DetalleId id, @RequestBody DetalleEntity detalle) {
+        if (id != null && this.detalleService.exists(id)) {
+            detalle.setId(id); // Asegurarse de que el ID es correcto
+            return ResponseEntity.ok(this.detalleService.save(detalle));
+        }
+
+        return ResponseEntity.badRequest().build();
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable DetalleId id) {
+        if (this.detalleService.exists(id)) {
+            this.detalleService.deleteUsuario(id);
             return ResponseEntity.ok().build();
-        } else {
-            return ResponseEntity.notFound().build();
         }
+        return ResponseEntity.badRequest().build();
     }
 }
