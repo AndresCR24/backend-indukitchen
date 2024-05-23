@@ -40,5 +40,6 @@ public class CarritoEntity {
 
     @ManyToOne
     @JoinColumn(name = "cedula_cliente", referencedColumnName = "cedula", insertable = false, updatable = false)
+    @JsonBackReference
     private ClienteEntity clienteCarrito;
 }

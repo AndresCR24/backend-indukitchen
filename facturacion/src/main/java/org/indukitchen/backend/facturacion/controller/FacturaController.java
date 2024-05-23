@@ -15,12 +15,10 @@ import java.util.List;
 public class FacturaController {
 
     private final FacturaService facturaService;
-    private final CarritoService carritoService;
 
     @Autowired
     public FacturaController(FacturaService facturaService, CarritoService carritoService) {
         this.facturaService = facturaService;
-        this.carritoService = carritoService;
     }
 
     //Operaciones básicas CRUD
@@ -60,29 +58,5 @@ public class FacturaController {
         return ResponseEntity.badRequest().build();
     }
 
-    /*
-    @GetMapping("/usuario-por-carrito/{carritoId}")
-    public ResponseEntity<?> getUsuarioByCarritoId(@PathVariable Integer carritoId) {
-        CarritoEntity carrito = carritoService.get(carritoId);
-        if (carrito != null) {
-            CarritoDetalleDTO carritoDetalleDTO = new CarritoDetalleDTO();
-            carritoDetalleDTO.setCliente(carrito.getClienteCarrito());
-            carritoDetalleDTO.setDetalles(carrito.getDetalles());
-
-            return ResponseEntity.ok(carritoDetalleDTO);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
-     */
-
-    @GetMapping("/usuario-por-carrito/{carritoId}")
-    public ResponseEntity<?> getUsuarioByCarritoId(@PathVariable Integer carritoId) {
-        CarritoEntity carrito = carritoService.get(carritoId);
-        if (carrito != null) {
-            return ResponseEntity.ok(carrito);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
 }
+

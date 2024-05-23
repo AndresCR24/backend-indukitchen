@@ -47,5 +47,6 @@ public class ProductoEntity {
     private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "producto", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonBackReference
     private List<DetalleEntity> detalles;
 }
