@@ -7,6 +7,7 @@ import org.indukitchen.backend.facturacion.repository.FacturaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,7 +25,6 @@ public class FacturaService {
     {
         return this.facturaRepository.findAll();
     }
-
     public FacturaEntity get(Integer idFactura)
     {
         return this.facturaRepository.findById(idFactura).orElse(null);
@@ -43,5 +43,17 @@ public class FacturaService {
     public void deleteFactura(Integer idUsuario){
         this.facturaRepository.deleteById(idUsuario);
     }
+
+    public BigDecimal calculateTotal(Integer facturaId) {
+        FacturaEntity factura = get(facturaId);
+        if (factura == null || factura.getCarritoFactura() == null) {
+            return BigDecimal.ZERO;
+        }
+
+        return factura.getCarritoFactura().getDetalles().stream()
+                .map(detalle -> detalle.getProducto().getPrecio().multiply(BigDecimal.valueOf(detalle.getCantidad())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
 
 }

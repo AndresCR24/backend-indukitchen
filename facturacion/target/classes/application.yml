@@ -17,8 +17,6 @@ eureka:
     enabled: false
 
 
-
-
 #server:
 #  port: 8090
 
