@@ -22,7 +22,6 @@ public class EmailService {
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
-        // Asegúrate de que el remitente es la dirección de correo autenticada
         helper.setFrom("trabajo.indukitchen@hotmail.com");
         helper.setTo(to);
         helper.setSubject(subject);
