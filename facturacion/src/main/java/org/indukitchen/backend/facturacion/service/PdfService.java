@@ -9,6 +9,7 @@ import com.itextpdf.layout.element.Cell;
 import com.itextpdf.layout.element.Image;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
+import com.itextpdf.layout.property.HorizontalAlignment;
 import com.itextpdf.layout.property.TextAlignment;
 import com.itextpdf.layout.property.UnitValue;
 import lombok.Getter;
@@ -40,6 +41,7 @@ public class PdfService {
             String imagePath = "/Users/andresdavidcardenasramirez/Desktop/trabajo-propio/indukitchen-backend/facturacion/src/main/java/org/indukitchen/backend/facturacion/ayudas/logo.png"; // Cambia esto a la ruta de tu imagen
             ImageData imageData = ImageDataFactory.create(imagePath);
             Image image = new Image(imageData);
+            image.setHorizontalAlignment(HorizontalAlignment.CENTER);
 
             // Añadir la imagen al documento
             document.add(image);
@@ -53,6 +55,7 @@ public class PdfService {
             document.add(new Paragraph("Factura ID: " + factura.getId()));
             document.add(new Paragraph("Fecha: " + factura.getCreatedAt().toString()));
             document.add(new Paragraph("Cliente: " + factura.getCarritoFactura().getClienteCarrito().getNombre()));
+            document.add(new Paragraph("Correo: " + factura.getCarritoFactura().getClienteCarrito().getCorreo()));
             document.add(new Paragraph(" ")); // Espacio en blanco
 
             // Tabla de detalles del producto
@@ -63,6 +66,7 @@ public class PdfService {
             table.addHeaderCell(new Cell().add(new Paragraph("Producto").setBold()));
             table.addHeaderCell(new Cell().add(new Paragraph("Cantidad").setBold()));
             table.addHeaderCell(new Cell().add(new Paragraph("Precio Unitario").setBold()));
+
             table.addHeaderCell(new Cell().add(new Paragraph("Precio Total").setBold()));
 
             BigDecimal total = BigDecimal.ZERO;
