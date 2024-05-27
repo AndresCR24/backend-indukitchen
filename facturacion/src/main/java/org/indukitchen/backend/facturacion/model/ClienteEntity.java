@@ -53,7 +53,7 @@ public class ClienteEntity {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    @OneToMany(mappedBy = "clienteCarrito", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "clienteCarrito", cascade = CascadeType.ALL, orphanRemoval = false)
     @JsonManagedReference
     private List<CarritoEntity> carritos;
 }
