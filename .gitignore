@@ -34,5 +34,7 @@ out/
 /nbdist/
 /.nb-gradle/
 application.yml
+facturacion/src/main/resources/application.yml
+facturacion/target/classes/application.yml
 ### VS Code ###
 .vscode/

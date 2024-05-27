@@ -1,12 +1,8 @@
 package org.indukitchen.backend.facturacion.controller;
 
 import jakarta.mail.MessagingException;
-import org.indukitchen.backend.facturacion.model.CarritoEntity;
 import org.indukitchen.backend.facturacion.model.FacturaEntity;
-import org.indukitchen.backend.facturacion.service.CarritoService;
-import org.indukitchen.backend.facturacion.service.EmailService;
 import org.indukitchen.backend.facturacion.service.FacturaService;
-import org.indukitchen.backend.facturacion.service.PdfService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
@@ -30,23 +26,20 @@ public class FacturaController {
      * Inyeccion de dependencias
      */
     private final FacturaService facturaService;
-    private final PdfService pdfService;
-    private final EmailService emailService;
+    //private final PdfService pdfService;
+    //private final EmailService emailService;
+
 
     /**
      * Constructor del FacturaController con inyección de dependencias.
      *
      * @param facturaService Servicio para operaciones de facturas.
-     * @param pdfService Servicio para generación de PDFs.
-     * @param emailService Servicio para envío de correos electrónicos.
      */
-    @Autowired
-    public FacturaController(FacturaService facturaService, PdfService pdfService, EmailService emailService) {
-        this.facturaService = facturaService;
-        this.pdfService = pdfService;
-        this.emailService = emailService;
-    }
 
+    @Autowired
+    public FacturaController(FacturaService facturaService) {
+        this.facturaService = facturaService;
+    }
     /**
      * Añade una nueva factura.
      *
@@ -145,7 +138,7 @@ public class FacturaController {
     public ResponseEntity<InputStreamResource> getPdf(@PathVariable Integer id) {
         FacturaEntity factura = facturaService.get(id);
         if (factura != null) {
-            ByteArrayOutputStream baos = pdfService.generateFacturaPdf(factura);
+            ByteArrayOutputStream baos = facturaService.generateFacturaPdf(factura);
             ByteArrayInputStream bis = new ByteArrayInputStream(baos.toByteArray());
             HttpHeaders headers = new HttpHeaders();
             headers.add("Content-Disposition", "attachment; filename=factura_" + id + ".pdf");
@@ -184,20 +177,22 @@ public class FacturaController {
         // Obtener la factura
         FacturaEntity factura = facturaService.get(id);
 
+        // Verificar si es nula para evitar bug que se generaba al intentar enviar un email
         if (factura == null) {
             return ResponseEntity.notFound().build();
         }
 
-        // Generar PDF de la factura
-        ByteArrayOutputStream pdfOutputStream = pdfService.generateFacturaPdf(factura);
+        // Generar PDF de la factura utilizando el metodo de PdfService
+        ByteArrayOutputStream pdfOutputStream = facturaService.generateFacturaPdf(factura);
         byte[] pdfBytes = pdfOutputStream.toByteArray();
 
         // Obtener la dirección de correo del cliente
         String emailCliente = factura.getCarritoFactura().getClienteCarrito().getCorreo();
 
-        // Enviar el correo electrónico con la factura adjunta
+        // Enviar el correo electrónico con la factura adjunta manejando la excepciones para entender bien
+        // si se genera un error
         try {
-            emailService.sendEmailWithAttachment(
+            facturaService.sendEmailWithAttachment(
                     emailCliente,
                     "Tu factura de Indukitchen",
                     "Adjunto encontrarás tu factura.",
