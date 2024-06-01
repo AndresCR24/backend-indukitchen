@@ -84,8 +84,8 @@ public class FacturaService {
     public void sendEmailWithAttachment(String to, String subject, String text, byte[] pdfBytes, String pdfFilename) throws MessagingException {
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
-
-        helper.setFrom("trabajo.indukitchen2@hotmail.com");
+        // Configuracion de los detalles del correo
+        helper.setFrom("trabajo.indukitchen3@hotmail.com");
         helper.setTo(to);
         helper.setSubject(subject);
         helper.setText(text);

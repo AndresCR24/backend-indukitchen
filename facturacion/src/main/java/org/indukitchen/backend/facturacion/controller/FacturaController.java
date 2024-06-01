@@ -182,7 +182,7 @@ public class FacturaController {
             return ResponseEntity.notFound().build();
         }
 
-        // Generar PDF de la factura utilizando el metodo de PdfService
+        // Generar PDF de la factura utilizando el metodo de Pdf de facturaService
         ByteArrayOutputStream pdfOutputStream = facturaService.generateFacturaPdf(factura);
         byte[] pdfBytes = pdfOutputStream.toByteArray();
 

@@ -13,7 +13,7 @@ spring:
   mail:
     host: smtp.office365.com
     port: 587
-    username: trabajo.indukitchen2@hotmail.com
+    username: trabajo.indukitchen3@hotmail.com
     password: Fundamentos123
     properties:
       mail:
