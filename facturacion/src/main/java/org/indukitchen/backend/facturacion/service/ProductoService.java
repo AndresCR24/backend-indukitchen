@@ -1,44 +1,46 @@
 package org.indukitchen.backend.facturacion.service;
 
-import org.indukitchen.backend.facturacion.model.ProductoEntity;
+import org.indukitchen.backend.facturacion.mapper.ProductoMapper;
+import org.indukitchen.backend.facturacion.dto.ProductoDto;
 import org.indukitchen.backend.facturacion.repository.ProductoRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class ProductoService {
 
     private final ProductoRepository productoRepository;
+    private final ProductoMapper productoMapper;
 
-    @Autowired
-    public ProductoService(ProductoRepository productoRepository) {
+
+    public ProductoService(ProductoRepository productoRepository, ProductoMapper productoMapper) {
         this.productoRepository = productoRepository;
+        this.productoMapper = productoMapper;
     }
 
-    public List<ProductoEntity> getAll()
-    {
-        return this.productoRepository.findAll();
+    public List<ProductoDto> getAll() {
+        return productoMapper.aDtos(this.productoRepository.findAll());
     }
 
-    public ProductoEntity get(Integer idProducto)
-    {
-        return this.productoRepository.findById(idProducto).orElse(null);
+    public ProductoDto get(String idProducto) {
+        return this.productoMapper.aDto(
+                this.productoRepository.findById(UUID.fromString(idProducto)).orElse(null));
     }
 
-    public ProductoEntity save(ProductoEntity producto)
-    {
-        return this.productoRepository.save(producto);
+    public ProductoDto save(ProductoDto producto) {
+        return this.productoMapper.aDto(
+                this.productoRepository.save(
+                        this.productoMapper.aEntidad(producto)));
     }
 
-    public boolean exists(int idProducto)
-    {
-        return this.productoRepository.existsById(idProducto);
+    public boolean exists(String idProducto) {
+        return this.productoRepository.existsById(UUID.fromString(idProducto));
     }
 
-    public void deleteProducto(int idProducto){
-        this.productoRepository.deleteById(idProducto);
+    public void deleteProducto(String idProducto) {
+        this.productoRepository.deleteById(UUID.fromString(idProducto));
     }
 
 }

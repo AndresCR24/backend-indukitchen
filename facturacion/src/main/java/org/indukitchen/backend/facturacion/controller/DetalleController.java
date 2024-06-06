@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/detalles")
@@ -59,9 +60,9 @@ public class DetalleController {
 
 
     @PutMapping
-    public ResponseEntity<DetalleEntity> update(@RequestParam Integer idCarrito, @RequestParam Integer idProducto, @RequestBody DetalleEntity detalle) {
+    public ResponseEntity<DetalleEntity> update(@RequestParam Integer idCarrito, @RequestParam String idProducto, @RequestBody DetalleEntity detalle) {
         try {
-            DetalleId id = new DetalleId(idCarrito, idProducto);
+            DetalleId id = new DetalleId(idCarrito, UUID.fromString(idProducto));
             if (id != null && this.detalleService.exists(id)) {
                 detalle.setId(id);
                 return ResponseEntity.ok(this.detalleService.save(detalle));

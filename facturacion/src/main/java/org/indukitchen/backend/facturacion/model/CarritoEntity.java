@@ -15,7 +15,7 @@ import java.util.List;
  * Representa la entidad del carrito de compras.
  */
 @Entity
-@Table(name = "carrito")
+@Table(name = "carritos")
 @Getter
 @Setter
 @NoArgsConstructor

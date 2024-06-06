@@ -1,5 +1,6 @@
 package org.indukitchen.backend.facturacion.controller;
 
+import org.indukitchen.backend.facturacion.dto.ProductoDto;
 import org.indukitchen.backend.facturacion.model.ProductoEntity;
 import org.indukitchen.backend.facturacion.service.ProductoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,20 +22,21 @@ public class ProductoController {
 
     //Operaciones básicas CRUD
     @PostMapping
-    public ResponseEntity<ProductoEntity> add(@RequestBody ProductoEntity producto) {
-        ProductoEntity productoGuardado = this.productoService.save(producto);
+    public ResponseEntity<ProductoDto> add(@RequestBody ProductoDto producto) {
+        ProductoDto productoGuardado = this.productoService.save(producto);
         return ResponseEntity.ok(productoGuardado);
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductoEntity>> getAll() {
-        List<ProductoEntity> productos = this.productoService.getAll();
+    public ResponseEntity<List<ProductoDto>> getAll() {
+        List<ProductoDto> productos = this.productoService.getAll();
         return ResponseEntity.ok(productos);
+
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProductoEntity> get(@PathVariable Integer id) {
-        ProductoEntity producto = this.productoService.get(id);
+    public ResponseEntity<ProductoDto> get(@PathVariable String id) {
+        ProductoDto producto = this.productoService.get(id);
         if (producto != null) {
             return ResponseEntity.ok(producto);
         } else {
@@ -43,9 +45,9 @@ public class ProductoController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ProductoEntity> update(@PathVariable Integer id, @RequestBody ProductoEntity producto) {
+    public ResponseEntity<ProductoDto> update(@PathVariable String id, @RequestBody ProductoDto producto) {
         if (producto.getId() != null && producto.getId().equals(id) && this.productoService.exists(id)) {
-            ProductoEntity productoActualizado = this.productoService.save(producto);
+            ProductoDto productoActualizado = this.productoService.save(producto);
             return ResponseEntity.ok(productoActualizado);
         }
 
@@ -53,7 +55,7 @@ public class ProductoController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Integer id) {
+    public ResponseEntity<Void> delete(@PathVariable String id) {
         if (this.productoService.exists(id)) {
             this.productoService.deleteProducto(id);
             return ResponseEntity.ok().build();

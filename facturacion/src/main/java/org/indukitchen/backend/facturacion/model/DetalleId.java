@@ -8,6 +8,7 @@ import lombok.Setter;
 
 import java.io.Serializable;
 import java.util.Objects;
+import java.util.UUID;
 
 @Embeddable
 @Getter
@@ -19,9 +20,9 @@ public class DetalleId implements Serializable {
     private Integer idCarrito;
 
     @Column(name = "id_producto")
-    private Integer idProducto;
+    private UUID idProducto;
 
-    public DetalleId(Integer idCarrito, Integer idProducto) {
+    public DetalleId(Integer idCarrito, UUID idProducto) {
         this.idCarrito = idCarrito;
         this.idProducto = idProducto;
     }

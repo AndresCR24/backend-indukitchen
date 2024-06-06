@@ -11,42 +11,45 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
-@Table(name = "producto")
+@Table(name = "productos")
 @Getter
 @Setter
 @NoArgsConstructor
 public class ProductoEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
-    @Column//(nullable = false)
+    @Column
     private String nombre;
 
     @Column(length = 150)
     private String descripcion;
 
-    @Column//(nullable = false)
+    @Column
     private BigDecimal precio;
 
-    @Column//(nullable = false)
+    @Column
     private Integer existencia;
 
-    @Column//(nullable = false)
+    @Column
     private Double peso;
+
+    @Column
+    private String imagen;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     @CreationTimestamp
     private LocalDateTime createdAt;
 
-    @Column(name = "updated_at", nullable = false)
+    @Column(name = "updated_at")
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "producto", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    @JsonBackReference
     private List<DetalleEntity> detalles;
 }

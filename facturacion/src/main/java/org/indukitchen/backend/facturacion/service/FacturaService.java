@@ -9,13 +9,11 @@ import com.itextpdf.layout.element.Cell;
 import com.itextpdf.layout.element.Image;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
-import com.itextpdf.layout.property.HorizontalAlignment;
-import com.itextpdf.layout.property.TextAlignment;
-import com.itextpdf.layout.property.UnitValue;
+import com.itextpdf.layout.properties.HorizontalAlignment;
+import com.itextpdf.layout.properties.TextAlignment;
+import com.itextpdf.layout.properties.UnitValue;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
-import org.indukitchen.backend.facturacion.model.CarritoEntity;
-import org.indukitchen.backend.facturacion.model.ClienteEntity;
 import org.indukitchen.backend.facturacion.model.DetalleEntity;
 import org.indukitchen.backend.facturacion.model.FacturaEntity;
 import org.indukitchen.backend.facturacion.repository.FacturaRepository;
@@ -29,7 +27,6 @@ import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class FacturaService {
