@@ -1,32 +1,32 @@
 package org.indukitchen.backend.facturacion.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.UUID;
+
 @Entity
 @Table(name = "detalles")
+@IdClass(DetalleId.class)
 @Getter
 @Setter
 @NoArgsConstructor
 public class DetalleEntity {
 
-    @EmbeddedId
-    private DetalleId id = new DetalleId();
+    @Id
+    private UUID idProducto;
 
-    @ManyToOne
-    @MapsId("idCarrito")
-    @JoinColumn(name = "id_carrito")
-    @JsonBackReference
+    @Id
+    private UUID idCarrito;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_carrito", insertable = false, updatable = false)
     private CarritoEntity carrito;
 
-    @ManyToOne
-    @MapsId("idProducto")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_producto", insertable = false, updatable = false)
     private ProductoEntity producto;
 
     @Column(name = "cantidad", nullable = false)

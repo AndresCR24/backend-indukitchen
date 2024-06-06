@@ -8,6 +8,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Table(name = "facturas")
@@ -17,11 +18,11 @@ import java.time.LocalDateTime;
 public class FacturaEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
     @Column(name = "id_carrito", nullable = false)
-    private Integer idCarrito;
+    private UUID idCarrito;
 
     @Column(name = "id_metodo_pago")
     private Integer idMetodoPago;

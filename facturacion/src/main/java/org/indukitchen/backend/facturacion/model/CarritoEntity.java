@@ -1,6 +1,5 @@
 package org.indukitchen.backend.facturacion.model;
 
-import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,6 +9,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Representa la entidad del carrito de compras.
@@ -19,14 +19,13 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-
 public class CarritoEntity {
     /**
      * Identificador único del carrito.
      */
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
     /**
      * Identificador del cliente asociado con el carrito.
@@ -56,8 +55,7 @@ public class CarritoEntity {
      * Cada detalle representa un producto en el carrito.
      * Se maneja la relación bidireccional con la entidad DetalleEntity.
      */
-    @OneToMany(mappedBy = "carrito", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
+    @OneToMany(mappedBy = "carrito", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<DetalleEntity> detalles;
 
     /**
@@ -66,6 +64,5 @@ public class CarritoEntity {
      */
     @ManyToOne
     @JoinColumn(name = "cedula_cliente", referencedColumnName = "cedula", insertable = false, updatable = false)
-    @JsonBackReference
-    private ClienteEntity clienteCarrito;
+    private ClienteEntity cliente;
 }

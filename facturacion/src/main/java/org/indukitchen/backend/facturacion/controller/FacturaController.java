@@ -77,7 +77,7 @@ public class FacturaController {
      * @return La factura actualizada.
      */
     @PutMapping("/{id}")
-    public ResponseEntity<FacturaEntity> update(@PathVariable Integer id, @RequestBody FacturaEntity factura) {
+    public ResponseEntity<FacturaEntity> update(@PathVariable String id, @RequestBody FacturaEntity factura) {
         if (factura.getId() != null && factura.getId().equals(id) && this.facturaService.exists(id)) {
             FacturaEntity facturaActualizada = this.facturaService.save(factura);
             return ResponseEntity.ok(facturaActualizada);
@@ -93,7 +93,7 @@ public class FacturaController {
      * @return Respuesta vacía si la eliminación fue exitosa.
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Integer id) {
+    public ResponseEntity<Void> delete(@PathVariable String id) {
         if (this.facturaService.exists(id)) {
             this.facturaService.deleteFactura(id);
             return ResponseEntity.ok().build();
@@ -119,7 +119,7 @@ public class FacturaController {
      * @return La factura correspondiente al ID.
      */
     @GetMapping("/{id}")
-    public ResponseEntity<FacturaEntity> get(@PathVariable Integer id) {
+    public ResponseEntity<FacturaEntity> get(@PathVariable String id) {
         FacturaEntity factura = facturaService.get(id);
         if (factura != null) {
             return ResponseEntity.ok(factura);
@@ -135,7 +135,7 @@ public class FacturaController {
      */
 
     @GetMapping("/{id}/pdf")
-    public ResponseEntity<InputStreamResource> getPdf(@PathVariable Integer id) {
+    public ResponseEntity<InputStreamResource> getPdf(@PathVariable String id) {
         FacturaEntity factura = facturaService.get(id);
         if (factura != null) {
             ByteArrayOutputStream baos = facturaService.generateFacturaPdf(factura);
@@ -161,7 +161,7 @@ public class FacturaController {
      * @return El total de la factura.
      */
     @GetMapping("/{id}/total")
-    public ResponseEntity<BigDecimal> getTotal(@PathVariable Integer id) {
+    public ResponseEntity<BigDecimal> getTotal(@PathVariable String id) {
         BigDecimal total = facturaService.calculateTotal(id);
         return ResponseEntity.ok(total);
     }
@@ -173,7 +173,7 @@ public class FacturaController {
      * @return Respuesta indicando si el envío fue exitoso o no.
      */
     @PostMapping("/{id}/enviar-pdf")
-    public ResponseEntity<String> generarYEnviarFactura(@PathVariable Integer id) {
+    public ResponseEntity<String> generarYEnviarFactura(@PathVariable String id) {
         // Obtener la factura
         FacturaEntity factura = facturaService.get(id);
 
@@ -187,7 +187,7 @@ public class FacturaController {
         byte[] pdfBytes = pdfOutputStream.toByteArray();
 
         // Obtener la dirección de correo del cliente
-        String emailCliente = factura.getCarritoFactura().getClienteCarrito().getCorreo();
+        String emailCliente = factura.getCarritoFactura().getCliente().getCorreo();
 
         // Enviar el correo electrónico con la factura adjunta manejando la excepciones para entender bien
         // si se genera un error

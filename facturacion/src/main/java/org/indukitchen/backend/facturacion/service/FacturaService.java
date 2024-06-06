@@ -16,7 +16,9 @@ import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.indukitchen.backend.facturacion.model.DetalleEntity;
 import org.indukitchen.backend.facturacion.model.FacturaEntity;
+import org.indukitchen.backend.facturacion.model.ProductoEntity;
 import org.indukitchen.backend.facturacion.repository.FacturaRepository;
+import org.indukitchen.backend.facturacion.repository.ProductoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -24,9 +26,13 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.math.BigDecimal;
+import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class FacturaService {
@@ -36,37 +42,36 @@ public class FacturaService {
 
     private final FacturaRepository facturaRepository;
     private final JavaMailSender mailSender;
+    private final ProductoRepository productoRepository;
 
     @Autowired
-    public FacturaService(FacturaRepository facturaRepository, JavaMailSender mailSender) {
+    public FacturaService(FacturaRepository facturaRepository, JavaMailSender mailSender, ProductoRepository productoRepository) {
         this.facturaRepository = facturaRepository;
         this.mailSender = mailSender;
+        this.productoRepository = productoRepository;
     }
 
-    public List<FacturaEntity> getAll()
-    {
+    public List<FacturaEntity> getAll() {
         return this.facturaRepository.findAll();
     }
-    public FacturaEntity get(Integer idFactura)
-    {
-        return this.facturaRepository.findById(idFactura).orElse(null);
+
+    public FacturaEntity get(String idFactura) {
+        return this.facturaRepository.findById(UUID.fromString(idFactura)).orElse(null);
     }
 
-    public FacturaEntity save(FacturaEntity factura)
-    {
+    public FacturaEntity save(FacturaEntity factura) {
         return this.facturaRepository.save(factura);
     }
 
-    public boolean exists(Integer idFactura)
-    {
-        return this.facturaRepository.existsById(idFactura);
+    public boolean exists(String idFactura) {
+        return this.facturaRepository.existsById(UUID.fromString(idFactura));
     }
 
-    public void deleteFactura(Integer idUsuario){
-        this.facturaRepository.deleteById(idUsuario);
+    public void deleteFactura(String idUsuario) {
+        this.facturaRepository.deleteById(UUID.fromString(idUsuario));
     }
 
-    public BigDecimal calculateTotal(Integer facturaId) {
+    public BigDecimal calculateTotal(String facturaId) {
         FacturaEntity factura = get(facturaId);
         if (factura == null || factura.getCarritoFactura() == null) {
             return BigDecimal.ZERO;
@@ -100,8 +105,8 @@ public class FacturaService {
             Document document = new Document(pdfDoc);
 
             // Cargar la imagen
-            String imagePath = "/Users/andresdavidcardenasramirez/Desktop/trabajo-propio/indukitchen-backend/facturacion/src/main/java/org/indukitchen/backend/facturacion/ayudas/logo.png"; // Cambia esto a la ruta de tu imagen
-            ImageData imageData = ImageDataFactory.create(imagePath);
+            InputStream imagePath = this.getClass().getClassLoader().getResourceAsStream("logo.png"); // Cambia esto a la ruta de tu imagen
+            ImageData imageData = ImageDataFactory.create(imagePath.readAllBytes());
             Image image = new Image(imageData);
             image.setHorizontalAlignment(HorizontalAlignment.CENTER);
 
@@ -116,8 +121,8 @@ public class FacturaService {
 
             document.add(new Paragraph("Factura ID: " + factura.getId()));
             document.add(new Paragraph("Fecha: " + factura.getCreatedAt().toString()));
-            document.add(new Paragraph("Cliente: " + factura.getCarritoFactura().getClienteCarrito().getNombre()));
-            document.add(new Paragraph("Correo: " + factura.getCarritoFactura().getClienteCarrito().getCorreo()));
+            document.add(new Paragraph("Cliente: " + factura.getCarritoFactura().getCliente().getNombre()));
+            document.add(new Paragraph("Correo: " + factura.getCarritoFactura().getCliente().getCorreo()));
             document.add(new Paragraph(" ")); // Espacio en blanco
 
             // Tabla de detalles del producto
@@ -134,19 +139,22 @@ public class FacturaService {
             BigDecimal total = BigDecimal.ZERO;
 
 
-
             for (DetalleEntity detalle : factura.getCarritoFactura().getDetalles()) {
-                BigDecimal precioTotalProducto = detalle.getProducto().getPrecio().multiply(BigDecimal.valueOf(detalle.getCantidad()));
-                total = total.add(precioTotalProducto);
+                Optional<ProductoEntity> productoOptional = productoRepository.findById(detalle.getIdProducto());
+                if(productoOptional.isPresent()) {
+                    ProductoEntity producto = productoOptional.get();
+                    BigDecimal precioTotalProducto = producto.getPrecio().multiply(BigDecimal.valueOf(detalle.getCantidad()));
+                    total = total.add(precioTotalProducto);
 
-                //impuesto = impuesto.add();
-                table.addCell(new Cell().add(new Paragraph(detalle.getProducto().getNombre())));
-                table.addCell(new Cell().add(new Paragraph(detalle.getCantidad().toString())));
-                table.addCell(new Cell().add(new Paragraph(decimalFormat.format(detalle.getProducto().getPrecio()))));
-                //table.addCell(new Cell().add(new Paragraph(detalle.getProducto().getPrecio().toString())));
-                table.addCell(new Cell().add(new Paragraph(decimalFormat.format(precioTotalProducto))));
-                //table.addCell(new Cell().add(new Paragraph(precioTotalProducto.toString())));
-                //table.addCell(new Cell().add(new Paragraph(impuesto.toString())));
+                    //impuesto = impuesto.add();
+                    table.addCell(new Cell().add(new Paragraph(producto.getNombre())));
+                    table.addCell(new Cell().add(new Paragraph(detalle.getCantidad().toString())));
+                    table.addCell(new Cell().add(new Paragraph(decimalFormat.format(producto.getPrecio()))));
+                    //table.addCell(new Cell().add(new Paragraph(detalle.getProducto().getPrecio().toString())));
+                    table.addCell(new Cell().add(new Paragraph(decimalFormat.format(precioTotalProducto))));
+                    //table.addCell(new Cell().add(new Paragraph(precioTotalProducto.toString())));
+                    //table.addCell(new Cell().add(new Paragraph(impuesto.toString())));
+                }
             }
 
             // Añadir la tabla al documento

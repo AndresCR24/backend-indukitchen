@@ -17,12 +17,12 @@ import java.util.UUID;
 public class DetalleId implements Serializable {
 
     @Column(name = "id_carrito")
-    private Integer idCarrito;
+    private UUID idCarrito;
 
     @Column(name = "id_producto")
     private UUID idProducto;
 
-    public DetalleId(Integer idCarrito, UUID idProducto) {
+    public DetalleId(UUID idCarrito, UUID idProducto) {
         this.idCarrito = idCarrito;
         this.idProducto = idProducto;
     }

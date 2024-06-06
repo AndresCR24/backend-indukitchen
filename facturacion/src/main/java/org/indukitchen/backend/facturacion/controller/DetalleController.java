@@ -60,11 +60,12 @@ public class DetalleController {
 
 
     @PutMapping
-    public ResponseEntity<DetalleEntity> update(@RequestParam Integer idCarrito, @RequestParam String idProducto, @RequestBody DetalleEntity detalle) {
+    public ResponseEntity<DetalleEntity> update(@RequestParam String idCarrito, @RequestParam String idProducto, @RequestBody DetalleEntity detalle) {
         try {
-            DetalleId id = new DetalleId(idCarrito, UUID.fromString(idProducto));
+            DetalleId id = new DetalleId(UUID.fromString(idCarrito), UUID.fromString(idProducto));
             if (id != null && this.detalleService.exists(id)) {
-                detalle.setId(id);
+                detalle.setIdCarrito(id.getIdCarrito());
+                detalle.setIdCarrito(id.getIdProducto());
                 return ResponseEntity.ok(this.detalleService.save(detalle));
             }
             return ResponseEntity.badRequest().build();
