@@ -8,6 +8,6 @@ import java.util.List;
 public class CarritoDto {
 
     private String id;
-    private ClienteDto clienteDto;
+    private ClienteDto cliente;
     private List<DetalleDto> detalles;
 }

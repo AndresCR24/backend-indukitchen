@@ -1,9 +1,7 @@
 package org.indukitchen.backend.facturacion.service;
 
 import jakarta.mail.MessagingException;
-import jakarta.transaction.Transactional;
 import org.indukitchen.backend.facturacion.dto.CarritoDto;
-import org.indukitchen.backend.facturacion.dto.DetalleDto;
 import org.indukitchen.backend.facturacion.mapper.CarritoMapper;
 import org.indukitchen.backend.facturacion.mapper.ClienteMapper;
 import org.indukitchen.backend.facturacion.mapper.DetalleMapper;
@@ -15,8 +13,8 @@ import org.indukitchen.backend.facturacion.repository.CarritoRepository;
 import org.indukitchen.backend.facturacion.repository.ClienteRepository;
 import org.indukitchen.backend.facturacion.repository.DetalleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.ByteArrayOutputStream;
 import java.time.LocalDateTime;
@@ -69,11 +67,11 @@ public class CarritoService {
         this.carritoRepository.deleteById(UUID.fromString(idCarrito));
     }
 
-    @Transactional
+    @Transactional(noRollbackFor = MessagingException.class)
     public CarritoDto procesarCarrito(CarritoDto carritoDto) {
         // TODO validar datos del carrito
         // Se almacena información del cliente
-        ClienteEntity cliente = clienteMapper.aEntidad(carritoDto.getClienteDto());
+        ClienteEntity cliente = clienteMapper.aEntidad(carritoDto.getCliente());
         cliente = this.clienteRepository.save(cliente);
 
         //se crea un nuevo carrito
@@ -99,7 +97,6 @@ public class CarritoService {
         factura.setCarritoFactura(carrito);
         factura = this.facturaService.save(factura);
 
-
         generarEnviarFactura(factura);
 
         return carritoMapper.aDto(carrito);
@@ -124,7 +121,7 @@ public class CarritoService {
                     pdfBytes,
                     "factura.pdf"
             );
-        } catch (MessagingException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
